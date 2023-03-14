@@ -1,1 +1,2 @@
-# effyai
+# EffyAI
+Training on datasets.
