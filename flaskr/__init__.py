@@ -14,7 +14,7 @@ db = get_db()
 if ENV == "dev":
     UPLOAD_FOLDER = 'C:/Users/novneet.patnaik/Documents/GitHub/ML-Analysis-azure/ml_ocr/tmp/upload_files'
 elif ENV == "qa":
-    UPLOAD_FOLDER = './effyai/flaskr/tmp/upload_files'
+    UPLOAD_FOLDER = './flaskr/tmp/upload_files'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'ppt', 'docx', 'mp4', }
 # ALLOWED_EXTENSIONS = {'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
