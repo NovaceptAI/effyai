@@ -1,12 +1,15 @@
 # from app import app
-import json
 import os.path
 import boto3
 from flask_api import status
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, request
 from werkzeug.utils import secure_filename
-# from .models import ocr_detect, segmentation_ml, topic_modelling, analysis, summarizer, chronology
+from flask_jwt_extended import JWTManager
+
+from .models.texttovideo import to_video
+from .models.effy_vision import video_tagging
 from .models.upload_data import get_db, ENV
+from .models.voice_library import library
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -18,6 +21,42 @@ elif ENV == "qa":
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'ppt', 'docx', 'mp4', }
 # ALLOWED_EXTENSIONS = {'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def create_app(test_config=None):
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        # load the test config if passed in
+        app.config.from_mapping(test_config)
+
+    app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+    jwt = JWTManager(app)
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    # Add Blueprints
+    app = add_blueprints(app)
+    # Session(app)
+    return app
+
+
+def add_blueprints(app):
+    # Add Blueprints
+    app.register_blueprint(to_video.bp)
+    app.register_blueprint(video_tagging.bp)
+    app.register_blueprint(library.bp)
+    # app.register_blueprint(landing_pages.bp)
+
+    return app
 
 
 def allowed_file(filename):
@@ -68,5 +107,5 @@ def upload_file():
         return content, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-def create_app(test_config=None):
-    return app
+app = create_app()
+
