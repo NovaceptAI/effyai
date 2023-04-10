@@ -9,4 +9,4 @@ moviepy~=1.0.3
 Flask-API.yandex~=0.6.2.1
 Flask-JWT-Extended
 opencv-python~=4.7.0.72
-numpy~=1.23.3
+numpy
