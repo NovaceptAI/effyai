@@ -6,6 +6,7 @@ from flask import Flask, request
 from werkzeug.utils import secure_filename
 from flask_jwt_extended import JWTManager
 
+from .models import landing_pages
 from .models.texttovideo import to_video
 from .models.effy_vision import video_tagging
 from .models.upload_data import get_db, ENV
@@ -54,7 +55,7 @@ def add_blueprints(app):
     app.register_blueprint(to_video.bp)
     app.register_blueprint(video_tagging.bp)
     app.register_blueprint(library.bp)
-    # app.register_blueprint(landing_pages.bp)
+    app.register_blueprint(landing_pages.bp)
 
     return app
 
