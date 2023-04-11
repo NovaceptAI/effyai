@@ -2,9 +2,9 @@ import cv2
 import json
 import numpy as np
 from flask import Blueprint, request
-from flask_api import status
-bp = Blueprint('videotagging', __name__, url_prefix='/tags')
 
+# from flask_api import status
+bp = Blueprint('videotagging', __name__, url_prefix='/tags')
 
 # Define the input video file path and JSON file path
 video_path = "input_video.mp4"
@@ -12,7 +12,6 @@ json_path = "input_tags.json"
 
 
 def create_video(txt, timestamp_from, timestamp_to, filename, file_storage_url):
-
     # Load the JSON file
     with open(json_path, "r") as f:
         tags_dict = json.load(f)
@@ -42,7 +41,7 @@ def create_video(txt, timestamp_from, timestamp_to, filename, file_storage_url):
             timestamp = int(cap.get(cv2.CAP_PROP_POS_MSEC))
 
             # Run object detection on the frame
-            blob = cv2.dnn.blobFromImage(frame, 1/255, (416, 416), swapRB=True, crop=False)
+            blob = cv2.dnn.blobFromImage(frame, 1 / 255, (416, 416), swapRB=True, crop=False)
             model.setInput(blob)
             detections = model.forward()
 
@@ -52,7 +51,8 @@ def create_video(txt, timestamp_from, timestamp_to, filename, file_storage_url):
                 if classes[class_id] in tags_dict:
                     confidence = detections[i, 2]
                     if confidence > 0.5:
-                        box = detections[i, 3:7] * np.array([frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
+                        box = detections[i, 3:7] * np.array(
+                            [frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
                         (x, y, w, h) = box.astype("int")
                         object_name = classes[class_id]
                         if object_name not in current_tags:
@@ -95,6 +95,6 @@ def create_video_call():
     create_video(inputs, timestamp_from, timestamp_to, file_name, file_storage_url)
 
     # Save video file
-    video_clip.write_videofile("output.mp4", codec='libx264', audio_codec='aac')
-    content = {'FILE STATUS': 'VIDEO SAVED'}
-    return content, status.HTTP_200_OK
+    # video_clip.write_videofile("output.mp4", codec='libx264', audio_codec='aac')
+    content = {'FILE STATUS': 'VIDEO SAVED', 'STATUS': 200}
+    return content
