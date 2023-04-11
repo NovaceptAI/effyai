@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_api import status
+# from flask_api import status
 from moviepy.editor import *
 
 bp = Blueprint('texttovideo', __name__, url_prefix='/ttv')
@@ -29,5 +29,5 @@ def create_video_call():
 
     # Save video file
     video_clip.write_videofile("output.mp4", codec='libx264', audio_codec='aac')
-    content = {'FILE STATUS': 'VIDEO SAVED'}
-    return content, status.HTTP_200_OK
+    content = {'FILE STATUS': 'VIDEO SAVED', "STATUS": 200}
+    return content

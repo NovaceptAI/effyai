@@ -1,7 +1,7 @@
 # from app import app
 import os.path
 import boto3
-from flask_api import status
+# from flask_api import status
 from flask import Flask, request
 from werkzeug.utils import secure_filename
 from flask_jwt_extended import JWTManager
@@ -100,12 +100,12 @@ def upload_file():
         file_content = open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'rb')
         s3.Bucket(s3_bucket).put_object(Key=filename, Body=file_content)
 
-        content = {'FILE STATUS': 'SAVED'}
-        return content, status.HTTP_200_OK
+        content = {'FILE STATUS': 'SAVED', "STATUS": 200}
+        return content
 
     else:
-        content = {'FILE STATUS': 'NOT SAVED'}
-        return content, status.HTTP_500_INTERNAL_SERVER_ERROR
+        content = {'FILE STATUS': 'NOT SAVED', "STATUS": 500}
+        return content
 
 
 app = create_app()
